@@ -26,8 +26,7 @@ var LeilaoSchema = new Schema({
 		default: ''
 	},
 	date: {
-		type: Date,
-		default: Date.now
+		type: Date
 	},
 	updated: {
 		type: Date,
