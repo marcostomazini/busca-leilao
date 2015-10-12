@@ -47,7 +47,11 @@
                         </label>
                         <div class="col-sm-6">
                            <p class="input-group">
-                              <input type="text" name="date" datepicker-popup="dd/MM/yyyy" ng-model="cliente.nascimento" is-open="opened" datepicker-options="dateOptions" close-text="Fechar"
+                              <input type="text" name="date" 
+                              	datepicker-popup="dd/MM/yyyy" 
+                              	ng-model="leilao.date" is-open="opened" 
+                              	datepicker-options="dateOptions" 
+                              	close-text="Fechar"
                               class="form-control ng-dirty ng-touched ng-invalid" />
                               <span class="input-group-btn">
                                  <button type="button" ng-click="open($event)" class="btn btn-default">
