@@ -81,12 +81,10 @@ exports.delete = function(req, res) {
  * List of veiculos
  */
 exports.list = function(req, res) {	
-
 	var datatablesQuery = require('datatables-query'),
         params = req.body,
         query = datatablesQuery(Veiculo);
  
- 	console.log(params);
     query.run(params).then(function (data) {
         res.json(data);
     }, function (err) {
@@ -94,18 +92,6 @@ exports.list = function(req, res) {
 			message: errorHandler.getErrorMessage(err)
 		});
     });
-
-
-	// Veiculo.find({}, '-descricao -url -created -updated -valorInicial -leilao')
-	// 	.sort('lote -created').exec(function(err, veiculos) {
-	// 	if (err) {
-	// 		return res.status(400).send({
-	// 			message: errorHandler.getErrorMessage(err)
-	// 		});
-	// 	} else {
-	// 		res.json(veiculos);
-	// 	}
-	// });
 };
 
 /**
