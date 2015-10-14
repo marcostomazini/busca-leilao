@@ -28,6 +28,7 @@ angular.module('usuarios-mobile').controller('UsuarioMobileController', [
 	    .withPaginationType('full_numbers')
 	    .withOption('bLengthChange', false)
 	    .withOption('bInfo', false)
+	    .withOption('processing', true)
 	    .withLanguageSource('/server/pt-br.json')
 	    .withBootstrap();
 	
