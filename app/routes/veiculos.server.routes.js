@@ -20,6 +20,9 @@ module.exports = function(app) {
         	session: false
     	}), veiculos.create);
 
+	app.route('/api/pesquisa/veiculos')
+		.post(users.requiresLogin, veiculos.list);
+
 	app.route('/api/veiculos/:leilaoId')
 		.get(users.requiresLogin, veiculos.list);
 

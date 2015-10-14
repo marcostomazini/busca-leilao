@@ -10,6 +10,12 @@ angular.module('veiculos').config(['$stateProvider', 'RouteHelpersProvider',
 			title: 'Listar Veiculos',
 			templateUrl: 'modules/veiculos/views/list-veiculos.client.view.html',
 			resolve: helper.resolveFor('datatables')
+		}).
+		state('app.listTodosVeiculos', {
+			url: '/pesquisa-veiculos',
+			title: 'Listar Veiculos',
+			templateUrl: 'modules/veiculos/views/todos-veiculos.client.view.html',
+			resolve: helper.resolveFor('datatables')
 		});
 	}
 ]);
