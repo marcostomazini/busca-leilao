@@ -2,6 +2,6 @@
 
 angular.module('app.core').controller('HomeController', ['$scope', 'Authentication',
 	function($scope, Authentication) {
-
+		$scope.veiculos = 123;
 	}
 ]);
