@@ -95,6 +95,22 @@ exports.list = function(req, res) {
 };
 
 /**
+ * List of veiculos
+ */
+exports.count = function(req, res) {	
+	Veiculo.find().count().exec(function(err, qtde) {
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			console.log(qtde);
+			res.json(qtde);
+		}
+	});
+};
+
+/**
  * veiculo middleware
  */
 exports.veiculoByID = function(req, res, next, id) {

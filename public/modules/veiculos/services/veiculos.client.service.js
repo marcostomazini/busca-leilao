@@ -4,6 +4,8 @@
 angular.module('veiculos').factory('Veiculos', ['$resource',
 	function($resource) {
 
+		var Quantidade = $resource('api/pesquisa/veiculos');
+
 		var Veiculos = $resource('api/veiculos/:leilaoId', 
 			{ leilaoId: '@_id' });
 
@@ -14,6 +16,7 @@ angular.module('veiculos').factory('Veiculos', ['$resource',
     	return {
     		veiculos: Veiculos,
     		veiculo: Veiculo,
+    		quantidade: Quantidade
     	};
 	}
 ]);

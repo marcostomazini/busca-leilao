@@ -409,9 +409,15 @@ angular.module('app.core').controller('HeaderController', ['$scope', 'Authentica
 ]);
 'use strict';
 
-angular.module('app.core').controller('HomeController', ['$scope', 'Authentication',
-	function($scope, Authentication) {
+angular.module('app.core').controller('HomeController', ['$scope', 'Authentication', 'Veiculos',
+	function($scope, Authentication, Veiculos) {
+		
+		Veiculos.quantidade.get().$promise.then(function(data) {
+				$scope.veiculos  =data;
+		});
 
+		var aasd = Veiculos.quantidade.get();
+		//$scope.veiculos = Veiculos.quantidade.get();
 	}
 ]);
 'use strict';
@@ -2463,7 +2469,8 @@ angular.module('veiculos').config(['$stateProvider', 'RouteHelpersProvider',
 ]);
 'use strict';
 
-angular.module('veiculos').controller('VeiculosController', [
+angular.module('veiculos')	
+    .controller('VeiculosController', [
 	'$scope', 
 	'$compile',
 	'$interval',
@@ -2488,6 +2495,7 @@ angular.module('veiculos').controller('VeiculosController', [
 		$modal) {		
 
 		$scope.authentication = Authentication;
+		$scope.pesquisa = {};
 
 		var createdRow = function(row, data, dataIndex) {
         	// Recompiling so we can bind Angular directive to the DT
@@ -2542,9 +2550,28 @@ angular.module('veiculos').controller('VeiculosController', [
 	        	type: 'POST'
 	    	})
 	    	.withOption('createdRow', createdRow)
+	    	.withOption('bFilter', false)
 	    	.withOption('processing', true)
 	    	.withOption('serverSide', true)
-		    .withPaginationType('full_numbers')
+	    	.withOption('fnServerParams', function (aoData) {
+                aoData.searchCustom = [{
+                    "name": "nome",
+                    "value": $scope.pesquisa.nome || ''
+                },{
+                    "name": "ano",
+                    "value": $scope.pesquisa.ano || ''
+                },{
+                    "name": "cor",
+                    "value": $scope.pesquisa.cor || ''
+                },{
+                    "name": "placa",
+                    "value": $scope.pesquisa.placa || ''
+                },{
+                    "name": "status",
+                    "value": $scope.pesquisa.status || ''
+                }];
+            })
+		    .withPaginationType('full_numbers')		    
 		    .withLanguageSource('/server/pt-br.json');
 
 	    this.dtColumns = [
@@ -2563,7 +2590,7 @@ angular.module('veiculos').controller('VeiculosController', [
         	DTColumnBuilder.newColumn('status').withTitle('Status'),
         	DTColumnBuilder.newColumn(null).withTitle('Status')
         		.renderWith(statusHtml)
-    	];    	
+    	];
 
 		$scope.urlBase = '/#!/veiculos';
 
@@ -2583,6 +2610,10 @@ angular.module('veiculos').controller('VeiculosController', [
             };			
       	}
 		
+		$scope.pesquisar = function() {
+			$('#veiculos-grid').DataTable().ajax.reload();
+		};
+
 		$scope.visualizar = function(id) {
 			var modalInstance = $modal.open({
             	templateUrl: 'modalVisualizar.html',
@@ -2698,6 +2729,8 @@ angular.module('veiculos').controller('VeiculoController', [
 angular.module('veiculos').factory('Veiculos', ['$resource',
 	function($resource) {
 
+		var Quantidade = $resource('api/pesquisa/veiculos');
+
 		var Veiculos = $resource('api/veiculos/:leilaoId', 
 			{ leilaoId: '@_id' });
 
@@ -2708,6 +2741,7 @@ angular.module('veiculos').factory('Veiculos', ['$resource',
     	return {
     		veiculos: Veiculos,
     		veiculo: Veiculo,
+    		quantidade: Quantidade
     	};
 	}
 ]);

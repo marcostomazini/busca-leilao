@@ -21,6 +21,7 @@ module.exports = function(app) {
     	}), veiculos.create);
 
 	app.route('/api/pesquisa/veiculos')
+		.get(users.requiresLogin, veiculos.count)
 		.post(users.requiresLogin, veiculos.list);
 
 	app.route('/api/veiculos/:leilaoId')
