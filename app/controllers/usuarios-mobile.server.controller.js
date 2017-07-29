@@ -9,6 +9,7 @@ var mongoose = require('mongoose'),
 	Veiculo = mongoose.model('Veiculo'),
 	_ = require('lodash'),
 	http = require("http"),
+	https = require('https'),
 	cheerio = require("cheerio");
 
 /**
@@ -59,7 +60,7 @@ function start(usuarioMobile, leilao, req) {
 };
 
 function download(url, callback) {
-  http.get(url, function(res) {
+  https.get(url, function(res) {
     var data = "";
     res.on('data', function (chunk) {
       data += chunk;
