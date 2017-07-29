@@ -42,7 +42,7 @@ function start(usuarioMobile, leilao, req) {
 							var lote = (pagina * totalItensPorPagina) - (totalItensPorPagina - i);
 							paginas.push({
 									lote: lote,
-									url: 'http://www.freitasleiloesonline.com.br/homesite/lotesdetalhes.asp?codleilao='+
+									url: 'https://www.freitasleiloesonline.com.br/homesite/lotesdetalhes.asp?codleilao='+
 										usuarioMobile.code+
 										'&lote=' + 
 										lote
@@ -126,7 +126,7 @@ function detalhe(listaPaginas, codigo, idLeilao, req) {
 				var valorLote = $('.valorLote').text().trim();
 				var statusLote = $('.statusLote').text().trim();				
 
-				valorLoteStatus('http://www.freitasleiloesonline.com.br/homesite/ajax/ajx_maiorLance.asp?CODLEILAO='+codigo+'&LOTE='+ item.lote,
+				valorLoteStatus('https://www.freitasleiloesonline.com.br/homesite/ajax/ajx_maiorLance.asp?CODLEILAO='+codigo+'&LOTE='+ item.lote,
 					function(dataValor) {
 
 					var veiculoDados = {
