@@ -15,7 +15,7 @@ angular.module('veiculos').config(['$stateProvider', 'RouteHelpersProvider',
 			url: '/pesquisa-veiculos',
 			title: 'Listar Veiculos',
 			templateUrl: 'modules/veiculos/views/todos-veiculos.client.view.html',
-			resolve: helper.resolveFor('datatables')
+			resolve: helper.resolveFor('datatables', 'xeditable')
 		});
 	}
 ]);

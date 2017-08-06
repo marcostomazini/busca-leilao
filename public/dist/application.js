@@ -2486,7 +2486,7 @@ angular.module('veiculos').config(['$stateProvider', 'RouteHelpersProvider',
 			url: '/pesquisa-veiculos',
 			title: 'Listar Veiculos',
 			templateUrl: 'modules/veiculos/views/todos-veiculos.client.view.html',
-			resolve: helper.resolveFor('datatables')
+			resolve: helper.resolveFor('datatables', 'xeditable')
 		});
 	}
 ]);
@@ -2592,6 +2592,9 @@ angular.module('veiculos')
                 },{
                     "name": "status",
                     "value": $scope.pesquisa.status || ''
+                },{
+                    "name": "leilao.date",
+                    "value": $scope.pesquisa.dataDe || ''
                 }];
             })
 		    .withPaginationType('full_numbers')		    
@@ -2632,6 +2635,20 @@ angular.module('veiculos')
 				$modalInstance.dismiss('cancel');
             };			
       	}
+
+      	$scope.openDe = function($event) {
+	    	$event.preventDefault();
+	    	$event.stopPropagation();
+
+	    	$scope.openedDe = true;
+		};
+
+		$scope.openAte = function($event) {
+	    	$event.preventDefault();
+	    	$event.stopPropagation();
+
+	    	$scope.openedAte = true;
+		};
 		
 		$scope.pesquisar = function() {
 			$('#veiculos-grid').DataTable().ajax.reload();

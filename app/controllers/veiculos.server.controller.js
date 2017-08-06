@@ -93,6 +93,19 @@ exports.list = function(req, res) {
 		});
     });
 };
+exports.listAll = function(req, res) {	
+	Veiculo.find({}, '-combustivel -valorInicial -url -imagens -updated -descricao')
+		.populate('leilao', 'date')
+		.sort('lote -created').exec(function(err, veiculos) {
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			res.json(veiculos);
+		}
+	});
+};
 
 /**
  * List of veiculos

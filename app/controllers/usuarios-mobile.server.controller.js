@@ -218,7 +218,7 @@ exports.validarUrl = function(req, res) {
 exports.create = function(req, res) {
 	var self = this;
 	var usuarioMobile = new Leilao(req.body);
-
+	
 	usuarioMobile.save(function(err) {
 		if (err) {
 			return res.status(400).send({
@@ -286,7 +286,10 @@ exports.delete = function(req, res) {
  * List of usuarioMobiles
  */
 exports.list = function(req, res) {			
-	Leilao.find({}, '-salt -password').sort('-created').exec(function(err, usuariosMobile) {
+	Leilao
+		.find({}, '-salt -password')
+		.sort('-created')
+		.exec(function(err, usuariosMobile) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)

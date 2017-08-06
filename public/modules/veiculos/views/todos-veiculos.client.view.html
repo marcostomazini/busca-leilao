@@ -104,6 +104,46 @@
                                  </div>
                               </fieldset>
 
+                              <fieldset>
+                                 <div class="form-group">
+                                    <label class="col-sm-2 control-label">
+                                        De:
+                                    </label>
+                                    
+                                    <div class="col-sm-5">
+                                       <p class="input-group">
+                                          <input type="text" name="dataDe" 
+                                             datepicker-popup="dd/MM/yyyy" 
+                                             ng-model="pesquisa.dataDe" is-open="openedDe" 
+                                             datepicker-options="dateOptions" 
+                                             close-text="Fechar"
+                                          class="form-control ng-dirty ng-touched ng-invalid" />
+                                          <span class="input-group-btn">
+                                             <button type="button" ng-click="openDe($event)" class="btn btn-default">
+                                                <em class="fa fa-calendar"></em>
+                                             </button>
+                                          </span>
+                                       </p>
+                                    </div>
+                                    
+                                    <div class="col-sm-5">
+                                       <p class="input-group">
+                                          <input type="text" name="dataAte" 
+                                             datepicker-popup="dd/MM/yyyy" 
+                                             ng-model="pesquisa.dataAte" is-open="openedAte" 
+                                             datepicker-options="dateOptions" 
+                                             close-text="Fechar"
+                                          class="form-control ng-dirty ng-touched ng-invalid" />
+                                          <span class="input-group-btn">
+                                             <button type="button" ng-click="openAte($event)" class="btn btn-default">
+                                                <em class="fa fa-calendar"></em>
+                                             </button>
+                                          </span>
+                                       </p>
+                                    </div>
+                                 </div>
+                              </fieldset>                              
+
                            </div>
                         </div>
 
