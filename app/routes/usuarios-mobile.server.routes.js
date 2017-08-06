@@ -8,6 +8,9 @@ var users = require('../../app/controllers/users.server.controller'),
 	usuariosMobile = require('../../app/controllers/usuarios-mobile.server.controller');
 
 module.exports = function(app) {
+	app.route('/api/leilao-validar-url')
+		.post(users.requiresLogin, usuariosMobile.validarUrl);
+
 	app.route('/api/usuarios-mobile')
 		.get(users.requiresLogin, usuariosMobile.list)
 		.post(users.requiresLogin, usuariosMobile.create);

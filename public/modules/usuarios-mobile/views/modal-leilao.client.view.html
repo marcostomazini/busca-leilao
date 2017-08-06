@@ -9,6 +9,28 @@
 		<div class="modal-body">
 
 			<div class="panel-body">
+
+				<fieldset>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">
+							Endereço
+						</label>
+						<div class="col-sm-10">
+							<p class="input-group">
+								<input type="url" 
+									name="url" 
+									required 
+									ng-model="leilao.url" 
+									class="form-control ng-dirty ng-touched ng-invalid ng-invalid-required">                           
+									<span class="input-group-btn">
+										<button type="button" ng-click="preencherCampos(leilao)" class="btn btn-default">
+											<em class="fa fa-terminal"></em>
+										</button>
+									</span>
+							</p>
+						</div>
+					</div>
+				</fieldset>
 		      
 		      	<fieldset>
 					<div class="form-group">
@@ -62,21 +84,6 @@
                         </div>
                      </div>
                   </fieldset>
-
-				<fieldset>
-					<div class="form-group">
-						<label class="col-sm-2 control-label">
-							Enderećo
-						</label>
-						<div class="col-sm-10">
-							<input type="url" 
-								name="url" 
-								required 
-								ng-model="leilao.url" 
-								class="form-control ng-dirty ng-touched ng-invalid ng-invalid-required">                           
-						</div>
-					</div>
-				</fieldset>
 
 		   </div>
 

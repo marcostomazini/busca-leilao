@@ -47,24 +47,26 @@ angular.module('usuarios-mobile').controller('UsuarioMobileController', [
 
 		// Context
 		$scope.authentication = Authentication;
-		$scope.leiloes = UsuariosMobile.query();
+		$scope.leiloes = UsuariosMobile.leilao.query();
 
 		ModalInstanceCtrl.$inject = ['$scope', '$modalInstance'];
           function ModalInstanceCtrl($scope, $modalInstance) {
+
+          	$scope.leilao = {};
 
           	$scope.open = function($event) {
 		    	$event.preventDefault();
 		    	$event.stopPropagation();
 
 		    	$scope.opened = true;
-			};	
+			};
 		
             $scope.ok = function (leilao) {
-				var model = new UsuariosMobile(leilao);
+            	var model = new UsuariosMobile.leilao(leilao);
 
 				// Redirect after save
 				model.$save(function(response) {
-					console.log(response);
+					//console.log(response);
 					$modalInstance.close('closed');
 				}, function(errorResponse) {
 					SweetAlert.swal('Erro!', errorResponse.data.message, errorResponse.data.type);
@@ -74,6 +76,11 @@ angular.module('usuarios-mobile').controller('UsuarioMobileController', [
             $scope.cancel = function () {
 				$modalInstance.dismiss('cancel');
             };
+
+            $scope.preencherCampos = function(url) {
+            	var leilaoPrenchido = UsuariosMobile.preencherDados.validar(url);
+		    	$scope.leilao = leilaoPrenchido;
+			};
           }
 
 		$scope.addItem = function(item) {

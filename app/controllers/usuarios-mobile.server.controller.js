@@ -100,6 +100,33 @@ function valorLoteStatus(url, callback) {
 	});
 };
 
+function preencherDadosNovoLeilao(url, callback) {
+	download(url, function(data) {
+		if (data) {
+			var novoLeilao = {};
+			var $ = cheerio.load(data);
+
+			if ($('#detalhes').text().indexOf('UTINGA') > 0) {
+				novoLeilao.name = "Utinga";
+			} else if ($('#detalhes').text().indexOf('STA') > 0) {
+				novoLeilao.name = "Santa Barbara";
+			} else if ($('#detalhes').text().indexOf('SANTO') > 0) {
+				novoLeilao.name = "Santo Andre";
+			}
+
+			var posicao = $('.corVermelha').text().indexOf("do dia") + 7;
+	    	novoLeilao.date = $('.corVermelha').text().substr(posicao, 10);
+
+	    	var posUrl = url.indexOf("CodLeilao=") + 10;
+	    	novoLeilao.code = url.substr(posUrl);
+
+	    	novoLeilao.url = url;
+			
+			callback(novoLeilao);
+		}
+	});
+};
+
 function detalhe(listaPaginas, codigo, idLeilao, req) {	
 	_.forEach(listaPaginas, function(item) {
   		download(item.url, function(data) {
@@ -173,6 +200,21 @@ function detalhe(listaPaginas, codigo, idLeilao, req) {
 	});	
 };
 
+/**
+ * validar url de leilao e preencher demais campos
+ */
+exports.validarUrl = function(req, res) {
+	var self = this;
+	var leilao = new Leilao(req.body);
+
+	preencherDadosNovoLeilao(leilao.url, function(data)	{
+		res.json(data);
+	});	
+};
+
+/**
+ * criar novo leilao
+ */
 exports.create = function(req, res) {
 	var self = this;
 	var usuarioMobile = new Leilao(req.body);
