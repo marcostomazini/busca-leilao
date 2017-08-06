@@ -2505,6 +2505,7 @@ angular.module('veiculos')
 	'DTColumnBuilder', 
 	'SweetAlert',
 	'$modal',
+	'$filter',
 	function($scope, 
 		$compile,
 		$interval,
@@ -2515,7 +2516,8 @@ angular.module('veiculos')
 		DTOptionsBuilder, 
 		DTColumnBuilder,
 		SweetAlert,
-		$modal) {		
+		$modal,
+		$filter) {		
 
 		$scope.authentication = Authentication;
 		$scope.pesquisa = {};
@@ -2605,15 +2607,16 @@ angular.module('veiculos')
 	    	DTColumnBuilder.newColumn('nome').withTitle('Acões')
 	    		.notSortable()
         		.renderWith(visualizarHtml),
-       //  	DTColumnBuilder.newColumn('nome').withTitle('Foto')
-	    		// .notSortable()
-       //  		.renderWith(imagemHtml),
         	DTColumnBuilder.newColumn('nome').withTitle('Nome'),
         	DTColumnBuilder.newColumn('ano').withTitle('Ano'),
         	DTColumnBuilder.newColumn('cor').withTitle('Cor'),
         	DTColumnBuilder.newColumn('placa').withTitle('Placa'),
         	DTColumnBuilder.newColumn('valorVenda').withTitle('Valor Vendido'),
         	DTColumnBuilder.newColumn('status').withTitle('Status'),
+        	DTColumnBuilder.newColumn('leilao.date').withTitle('Data')
+        		.renderWith(function(data, type, full) {
+    				return $filter('date')(data, 'dd/MM/yyyy');
+  				}),
         	DTColumnBuilder.newColumn(null).withTitle('Status')
         		.renderWith(statusHtml)
     	];
