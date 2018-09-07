@@ -46,6 +46,7 @@ app.set('socketio', socket);
 
 // Expose app
 exports = module.exports = app;
+process.env.MONGOLAB_USERNAME_DEV = 'lavajato';
 
 // Logging initialization
 console.log('Busca Leilao application started on port ' + config.port);

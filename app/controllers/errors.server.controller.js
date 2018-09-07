@@ -42,3 +42,12 @@ exports.getErrorMessage = function(err) {
 
 	return message;
 };
+
+/**
+ * Get the error message from error object
+ */
+exports.registroNaoEncontrado = function(err) {
+	var erro = { "message": "registro nao encontrado " + err + "", "success": false };
+
+	return erro;
+};

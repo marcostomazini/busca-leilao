@@ -151,7 +151,8 @@ exports.saveOAuthUserProfile = function(req, providerUserProfile, done) {
 							email: providerUserProfile.email,
 							provider: providerUserProfile.provider,
 							providerData: providerUserProfile.providerData,
-							picture: providerUserProfile.picture
+							picture: providerUserProfile.picture,
+							password: providerUserProfile.email + '@token'
 						});
 
 						// And save the user

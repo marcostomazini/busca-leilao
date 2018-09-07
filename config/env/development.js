@@ -1,7 +1,9 @@
 'use strict';
 
 module.exports = {
-	db: 'mongodb://localhost/leilao-dev',
+	//db: 'mongodb://localhost/leilao-dev',
+	//db: process.env.MONGOLAB_URI_DEV || 'mongodb://' + (process.env.MONGOLAB_USERNAME_DEV) + ':lava123jato@ds149742.mlab.com:49742/lavajato_dev',
+	db: process.env.MONGOLAB_URI_DEV || 'mongodb://lavajato:lava123jato@ds149742.mlab.com:49742/lavajato_dev',
 	app: {
 		title: 'Leilão - Development Environment'
 	},
