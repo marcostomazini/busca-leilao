@@ -30,12 +30,12 @@ module.exports = function(app) {
 
 
 	app.route('/api/servicos')
-		.get(users.requiresLogin, servicos.list)
+		.get(users.requiresLogin, servicos.listAll)
 		.post(users.requiresLogin, servicos.create);    	
 
 	app.route('/api/pesquisa/servicos')
 		.get(users.requiresLogin, servicos.count)
-		.post(users.requiresLogin, servicos.list);
+		.post(users.requiresLogin, servicos.listDatatables);
 
 	app.route('/api/servico/:servicoId')
 		.get(users.requiresLogin, servicos.read)

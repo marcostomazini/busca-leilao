@@ -30,12 +30,12 @@ module.exports = function(app) {
 
 
 	app.route('/api/pagamentos')
-		.get(users.requiresLogin, pagamentos.list)
+		.get(users.requiresLogin, pagamentos.listAll)
 		.post(users.requiresLogin, pagamentos.create);    	
 
 	app.route('/api/pesquisa/pagamentos')
 		.get(users.requiresLogin, pagamentos.count)
-		.post(users.requiresLogin, pagamentos.list);
+		.post(users.requiresLogin, pagamentos.listAll);
 
 	app.route('/api/pagamento/:pagamentoId')
 		.get(users.requiresLogin, pagamentos.read)

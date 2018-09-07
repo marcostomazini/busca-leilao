@@ -80,18 +80,19 @@ exports.delete = function(req, res) {
 /**
  * List of configuracoes
  */
-exports.list = function(req, res) {	
-	var datatablesQuery = require('datatables-query'),
-        params = req.body,
-        query = datatablesQuery(configuracao);
- 
-    query.run(params).then(function (data) {
-        res.json(data);
-    }, function (err) {
-        return res.status(400).send({
-			message: errorHandler.getErrorMessage(err)
-		});
-    });
+exports.list = function(req, res) {			
+	Configuracao
+		.find({})
+		.sort('-created')
+		.exec(function(err, usuariosMobile) {
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			res.json(usuariosMobile);
+		}
+	});
 };
 
 exports.listAll = function(req, res) {	

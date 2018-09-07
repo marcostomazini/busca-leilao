@@ -80,7 +80,7 @@ exports.delete = function(req, res) {
 /**
  * List of depositos
  */
-exports.list = function(req, res) {	
+ exports.listDatatables = function(req, res) {	
 	var datatablesQuery = require('datatables-query'),
         params = req.body,
         query = datatablesQuery(Deposito);

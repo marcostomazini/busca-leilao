@@ -47,6 +47,12 @@ angular.module('users').config(['$stateProvider', 'RouteHelpersProvider',
 			title: 'Listar Usuários Sistema',
 			templateUrl: 'modules/users/views/list-usuarios-sistema.client.view.html',
 			resolve: helper.resolveFor('datatables')
+		}).
+		state('app.listConfiguracoes', {
+			url: '/configuracoes-sistema',
+			title: 'Configurações',
+			templateUrl: 'modules/users/views/list-configuracoes-sistema.client.view.html',
+			resolve: helper.resolveFor('datatables')
 		});
 	}
 ]);

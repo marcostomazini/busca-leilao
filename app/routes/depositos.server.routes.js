@@ -30,12 +30,12 @@ module.exports = function(app) {
 
 
 	app.route('/api/depositos')
-		.get(users.requiresLogin, depositos.list)
+		.get(users.requiresLogin, depositos.listAll)
 		.post(users.requiresLogin, depositos.create);    	
 
 	app.route('/api/pesquisa/depositos')
 		.get(users.requiresLogin, depositos.count)
-		.post(users.requiresLogin, depositos.list);
+		.post(users.requiresLogin, depositos.listDatatables);
 
 	app.route('/api/deposito/:depositoId')
 		.get(users.requiresLogin, depositos.read)

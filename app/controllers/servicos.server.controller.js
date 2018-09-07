@@ -78,9 +78,9 @@ exports.delete = function(req, res) {
 };
 
 /**
- * List of servicos
+ * List of veiculos
  */
-exports.list = function(req, res) {	
+exports.listDatatables = function(req, res) {	
 	var datatablesQuery = require('datatables-query'),
         params = req.body,
         query = datatablesQuery(Servico);
