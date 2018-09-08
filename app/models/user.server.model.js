@@ -47,7 +47,7 @@ var UserSchema = new Schema({
   	ativo: { 
   		type: Boolean, 
   		//default: null // quando entrar em producao deve vir por padrao null
-  		default: true
+  		default: null
   	}, 
 	username: {
 		type: String,
