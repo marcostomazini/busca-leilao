@@ -54,7 +54,7 @@ var ServicoSchema = new Schema({
 	},
 	situacao: {
 		type: String,
-		enum: ['Fila', 'Lavagem', 'Secagem', 'Acabamento', 'Polimento', 'Finalizado', 'Outros'],
+		enum: ['Fila', 'Atendimento', 'Finalizado', 'Pago', 'Outros'],
 		default: 'Fila'
 	},
 	dataHoraEntrada: {

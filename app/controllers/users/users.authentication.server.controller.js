@@ -107,6 +107,14 @@ exports.oauthCallback = function(strategy) {
 						return res.redirect('/#!/signin');
 					}
 
+					if (user.roles[0] == 'mobile') {
+						// Remove sensitive data before login
+						user.token = user.password;
+						user.password = undefined;
+						user.salt = undefined;
+						return res.json(user);
+					}
+
 					return res.redirect(redirectURL || '/');
 				});
 			}

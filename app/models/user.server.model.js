@@ -63,6 +63,9 @@ var UserSchema = new Schema({
 	salt: {
 		type: String
 	},
+	token: {
+		type: String
+	},
 	provider: {
 		type: String,
 		required: 'Provider é obrigatório'
@@ -74,7 +77,7 @@ var UserSchema = new Schema({
 			type: String,
 			enum: ['admin', 'mobile']
 		}],
-		default: ['admin']
+		default: ['mobile']
 	},
 	updated: {
 		type: Date,
