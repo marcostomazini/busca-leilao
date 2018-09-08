@@ -87,6 +87,10 @@ angular.element(document).ready(function() {
 
     ApplicationConfiguration.registerModule('app.loadingbar');
 })();
+'use strict';
+
+// Use Applicaion configuration module to register a new module
+ApplicationConfiguration.registerModule('movimentacoes');
 (function() {
     'use strict';
 
@@ -409,15 +413,53 @@ angular.module('app.core').controller('HeaderController', ['$scope', 'Authentica
 ]);
 'use strict';
 
-angular.module('app.core').controller('HomeController', ['$scope', 'Authentication', 'Veiculos',
-	function($scope, Authentication, Veiculos) {
+angular.module('app.core').controller('HomeController', ['$scope', '$q', 'Authentication', 
+	'Veiculos', 'Pagamentos', 'Depositos','Servicos', 'UsuariosSistema',
+	function($scope, $q, Authentication, Veiculos, Pagamentos, Depositos, Servicos, UsuariosSistema) {
 		
+			
+
+		/*		
 		Veiculos.quantidade.get().$promise.then(function(data) {
-				$scope.veiculos  =data;
+			$scope.veiculos = data;
+		});	
+
+		var defer = $q.defer();
+		Pagamentos.quantidade.get().$promise.then(function(data) {
+			debugger;
+			$scope.qtdePagamentos = data.data;
+			//$scope.qtdePagamentos = 2;
+
+			defer.resolve(data.data);
+		});
+		
+		Pagamentos.quantidade.get().$promise.then(function(data) {
+			$scope.qtdePagamentosTeste = data.length;
+			$scope.qtdePagamentosTesteTeste = data.length;
 		});
 
-		var aasd = Veiculos.quantidade.get();
-		//$scope.veiculos = Veiculos.quantidade.get();
+		*/
+		
+		Veiculos.veiculos.query().$promise.then(function(data) {
+			$scope.qtdeVeiculos = data.length;
+		});	
+
+		UsuariosSistema.query().$promise.then(function(data) {
+			$scope.qtdeUsuarios = data.length;
+		});
+
+		Pagamentos.pagamentos.query().$promise.then(function(data) {
+			$scope.qtdePagamentos = data.length;
+		});
+
+		Depositos.depositos.query().$promise.then(function(data) {
+			$scope.qtdeDepositos = data.length;
+		});
+
+		Servicos.servicos.query().$promise.then(function(data) {
+			$scope.qtdeServicos = data.length;
+		});
+
 	}
 ]);
 'use strict';
@@ -698,6 +740,486 @@ angular.module('app.core').factory('mySocket', ["socketFactory", function(socket
     }
 
 })();
+'use strict';
+
+// Configuring the Articles module
+angular.module('movimentacoes').run(['Menus',
+	function(Menus) {
+		// Set top bar menu items
+		Menus.addMenuItem('sidebar', 'Movimentações', 'pesquisa-servicos', 'dropdown', '/pesquisa-servicos(/.*)?', false, null, 20, 'icon-lock');
+		Menus.addSubMenuItem('sidebar', 'pesquisa-servicos', 'Serviços', 'pesquisa-servicos');
+		Menus.addSubMenuItem('sidebar', 'pesquisa-servicos', 'Pagamentos', 'pesquisa-pagamentos');
+		Menus.addSubMenuItem('sidebar', 'pesquisa-servicos', 'Depositos', 'pesquisa-depositos');
+	}
+]);
+'use strict';
+
+// Setting up route
+angular.module('movimentacoes').config(['$stateProvider', 'RouteHelpersProvider',
+	function($stateProvider, helper) {
+		// Articles state routing
+		$stateProvider.
+		
+		state('app.listTodosDepositos', {
+			url: '/pesquisa-depositos',
+			title: 'Listar Depositos',
+			templateUrl: 'modules/movimentacoes/views/todos-depositos.client.view.html',
+			resolve: helper.resolveFor('datatables', 'xeditable')
+		}).
+
+		state('app.listTodosServicos', {
+			url: '/pesquisa-servicos',
+			title: 'Listar Servicos',
+			templateUrl: 'modules/movimentacoes/views/todos-servicos.client.view.html',
+			resolve: helper.resolveFor('datatables', 'xeditable')
+		}).
+
+		state('app.listTodosPagamentos', {
+			url: '/pesquisa-pagamentos',
+			title: 'Listar Pagamentos',
+			templateUrl: 'modules/movimentacoes/views/todos-pagamentos.client.view.html',
+			resolve: helper.resolveFor('datatables', 'xeditable')
+		});
+	}
+]);
+'use strict';
+
+angular.module('movimentacoes')	
+    .controller('DepositosController', [
+	'$scope', 
+	'$compile',
+	'$interval',
+	'$stateParams', 
+	'$location', 
+	'Authentication', 
+	'Depositos', 
+	'DTOptionsBuilder', 
+	'DTColumnBuilder', 
+	'SweetAlert',
+	'$modal',
+	'$filter',
+	function($scope, 
+		$compile,
+		$interval,
+		$stateParams, 
+		$location, 
+		Authentication, 
+		Depositos, 
+		DTOptionsBuilder, 
+		DTColumnBuilder,
+		SweetAlert,
+		$modal,
+		$filter) {		
+
+		$scope.authentication = Authentication;
+		$scope.pesquisa = {};
+
+		var createdRow = function(row, data, dataIndex) {
+        	// Recompiling so we can bind Angular directive to the DT
+        	$compile(angular.element(row).contents())($scope);
+    	}
+
+		this.dtOptions = DTOptionsBuilder
+			.newOptions()			
+	    	.withOption('ajax', {
+	    		dataSrc: 'data',
+	        	url: '/api/pesquisa/depositos',
+	        	type: 'POST'
+	    	})
+	    	.withOption('createdRow', createdRow)
+	    	.withOption('bFilter', false)
+	    	.withOption('processing', true)
+	    	.withOption('serverSide', true)
+	    	.withOption('fnServerParams', function (aoData) {
+                aoData.searchCustom = [{
+                    "name": "descricao",
+                    "value": $scope.pesquisa.descricao || ''
+                },{
+                    "name": "valor",
+                    "value": $scope.pesquisa.valor || ''
+                },{
+                    "name": "dataDeposito",
+                    "value": $scope.pesquisa.dataDeposito || ''
+                }];
+            })
+		    .withPaginationType('full_numbers')		    
+		    .withLanguageSource('/server/pt-br.json');
+
+	    this.dtColumns = [
+        	DTColumnBuilder.newColumn('descricao').withTitle('Descrição'),
+        	DTColumnBuilder.newColumn('valor').withTitle('Valor Depositado'),
+        	DTColumnBuilder.newColumn('dataDeposito').withTitle('Data do Deposito')
+        		.renderWith(function(data, type, full) {
+    				return $filter('date')(data, 'dd/MM/yyyy');
+  				})
+  			];
+
+		$scope.urlBase = '/#!/depositos';
+
+		// Context
+		$scope.authentication = Authentication;		
+
+      	$scope.openDe = function($event) {
+	    	$event.preventDefault();
+	    	$event.stopPropagation();
+
+	    	$scope.openedDe = true;
+		};
+
+		$scope.openAte = function($event) {
+	    	$event.preventDefault();
+	    	$event.stopPropagation();
+
+	    	$scope.openedAte = true;
+		};
+		
+		$scope.pesquisar = function() {
+			$('#depositos-grid').DataTable().ajax.reload();
+		};	
+	}
+]);
+'use strict';
+
+angular.module('movimentacoes')	
+    .controller('PagamentosController', [
+	'$scope', 
+	'$compile',
+	'$interval',
+	'$stateParams', 
+	'$location', 
+	'Authentication', 
+	'Pagamentos', 
+	'DTOptionsBuilder', 
+	'DTColumnBuilder', 
+	'SweetAlert',
+	'$modal',
+	'$filter',
+	function($scope, 
+		$compile,
+		$interval,
+		$stateParams, 
+		$location, 
+		Authentication, 
+		Pagamentos, 
+		DTOptionsBuilder, 
+		DTColumnBuilder,
+		SweetAlert,
+		$modal,
+		$filter) {		
+
+		$scope.authentication = Authentication;
+		$scope.pesquisa = {};
+
+		var createdRow = function(row, data, dataIndex) {
+        	// Recompiling so we can bind Angular directive to the DT
+        	$compile(angular.element(row).contents())($scope);
+    	}
+
+		this.dtOptions = DTOptionsBuilder
+			.newOptions()			
+	    	.withOption('ajax', {
+	    		dataSrc: 'data',
+	        	url: '/api/pesquisa/pagamentos',
+	        	type: 'POST'
+	    	})
+	    	.withOption('createdRow', createdRow)
+	    	.withOption('bFilter', false)
+	    	.withOption('processing', true)
+	    	.withOption('serverSide', true)
+	    	.withOption('fnServerParams', function (aoData) {
+                aoData.searchCustom = [{
+                    "name": "descricao",
+                    "value": $scope.pesquisa.descricao || ''
+                },{
+                    "name": "valor",
+                    "value": $scope.pesquisa.valor || ''
+                },{
+                    "name": "dataDeposito",
+                    "value": $scope.pesquisa.dataDeposito || ''
+                }];
+            })
+		    .withPaginationType('full_numbers')		    
+		    .withLanguageSource('/server/pt-br.json');
+
+	    this.dtColumns = [
+        	DTColumnBuilder.newColumn('descricao').withTitle('Descrição'),
+        	DTColumnBuilder.newColumn('valor').withTitle('Valor Pago'),
+        	DTColumnBuilder.newColumn('tipoPagamento').withTitle('Tipo de Pagamento'),
+        	DTColumnBuilder.newColumn('dataPagamento').withTitle('Data Pagamento')
+        		.renderWith(function(data, type, full) {
+    				return $filter('date')(data, 'dd/MM/yyyy');
+  				})
+  			];
+
+		$scope.urlBase = '/#!/pagamentos';
+
+		// Context
+		$scope.authentication = Authentication;		
+
+      	$scope.openDe = function($event) {
+	    	$event.preventDefault();
+	    	$event.stopPropagation();
+
+	    	$scope.openedDe = true;
+		};
+
+		$scope.openAte = function($event) {
+	    	$event.preventDefault();
+	    	$event.stopPropagation();
+
+	    	$scope.openedAte = true;
+		};
+		
+		$scope.pesquisar = function() {
+			$('#pagamentos-grid').DataTable().ajax.reload();
+		};	
+	}
+]);
+'use strict';
+
+angular.module('movimentacoes')	
+    .controller('ServicosController', [
+	'$scope', 
+	'$compile',
+	'$interval',
+	'$stateParams', 
+	'$location', 
+	'Authentication', 
+	'Servicos', 
+	'DTOptionsBuilder', 
+	'DTColumnBuilder', 
+	'SweetAlert',
+	'$modal',
+	'$filter',
+	function($scope, 
+		$compile,
+		$interval,
+		$stateParams, 
+		$location, 
+		Authentication, 
+		Servicos, 
+		DTOptionsBuilder, 
+		DTColumnBuilder,
+		SweetAlert,
+		$modal,
+		$filter) {		
+
+		$scope.authentication = Authentication;
+		$scope.pesquisa = {};
+
+		var createdRow = function(row, data, dataIndex) {
+        	// Recompiling so we can bind Angular directive to the DT
+        	$compile(angular.element(row).contents())($scope);
+    	}
+
+		var statusHtml = function(data, type, full, meta) {
+
+			var div = "";
+			if (data.observacao) {
+		        div = '<div class="label label-danger">Tem Observação</div><br>';			    
+			} else {
+			    div = '<div class="label label-info">Sem Observação</div><br>';
+			}
+
+			switch(data.tipoPagamento) {
+			    case 'Dinheiro':
+			        return div + '<div class="label label-success">Dinheiro</div>';
+			    case 'Debito':
+			        return div + '<div class="label label-info">Debito</div>';
+			    case 'Credito':
+			        return div + '<div class="label label-warning">Credito</div>';
+			    case 'Outros':
+			        return div + '<div class="label label-warning">Outros</div>';			    
+			    default:
+			        return div + '<div class="label label-danger">NONE</div>';
+			}			
+		}
+
+		var visualizarHtml = function(data, type, full, meta) {			
+			var item = full;
+			return "<div class=\"row\">"+
+					"	<div class=\"text-center\">"+
+					"		<div class=\"text-center\""+
+					"			popover=\"Visualizar\""+
+					"			popover-trigger=\"mouseenter\">"+
+					"			<a ng-click=\"visualizar('"+item._id+"')\">"+
+					"				<i class=\"fa icon-eyeglasses fa-2x\"></i>"+
+					"			</a>"+
+					"		</div>"+
+					"	</div>"+
+					"</div>";
+		}		
+
+		this.dtOptions = DTOptionsBuilder
+			.newOptions()			
+	    	.withOption('ajax', {
+	    		dataSrc: 'data',
+	        	url: '/api/pesquisa/servicos',
+	        	type: 'POST'
+	    	})
+	    	.withOption('createdRow', createdRow)
+	    	.withOption('bFilter', false)
+	    	.withOption('processing', true)
+	    	.withOption('serverSide', true)
+	    	.withOption('fnServerParams', function (aoData) {
+                aoData.searchCustom = [{
+                    "name": "nome",
+                    "value": $scope.pesquisa.nome || ''
+                },{
+                    "name": "ano",
+                    "value": $scope.pesquisa.ano || ''
+                },{
+                    "name": "cor",
+                    "value": $scope.pesquisa.cor || ''
+                },{
+                    "name": "placa",
+                    "value": $scope.pesquisa.placa || ''
+                },{
+                    "name": "status",
+                    "value": $scope.pesquisa.status || ''
+                },{
+                    "name": "leilao.date",
+                    "value": $scope.pesquisa.dataDe || ''
+                }];
+            })
+		    .withPaginationType('full_numbers')		    
+		    .withLanguageSource('/server/pt-br.json');
+
+	    this.dtColumns = [
+	    	DTColumnBuilder.newColumn('nomeCliente').withTitle('#').notVisible(),
+	    	DTColumnBuilder.newColumn('nomeCliente').withTitle('Acões')
+	    		.notSortable()
+        		.renderWith(visualizarHtml),
+        	DTColumnBuilder.newColumn('nomeCliente').withTitle('Cliente'),
+        	DTColumnBuilder.newColumn('celular').withTitle('Celular'),
+        	DTColumnBuilder.newColumn('tipoServico').withTitle('Serviço'),
+        	DTColumnBuilder.newColumn('valorRecebido').withTitle('Vlr Recebido')
+        		.renderWith(function(money, type, full) {
+    				return $filter('currency')(money, 'R$: ');
+  				}),,        	
+        	DTColumnBuilder.newColumn('dataHoraSaida').withTitle('Data Saida')
+        		.renderWith(function(data, type, full) {
+    				return $filter('date')(data, 'dd/MM/yyyy hh:mm');
+  				}),
+        	DTColumnBuilder.newColumn(null).withTitle('Tipo Pgto')
+        		.renderWith(statusHtml)
+    	];
+
+		$scope.urlBase = '/#!/servicos';
+
+		// Context
+		$scope.authentication = Authentication;		
+
+		ModalInstanceCtrl.$inject = ['$scope', '$modalInstance', 'Servicos', 'servicoId'];
+          function ModalInstanceCtrl($scope, $modalInstance, Servicos, servicoId) {
+
+          	// Find existing item
+			$scope.servico = Servicos.servico.get({ 
+				servicoId: servicoId
+			});
+
+            $scope.cancel = function () {
+				$modalInstance.dismiss('cancel');
+            };			
+      	}
+
+      	$scope.openDe = function($event) {
+	    	$event.preventDefault();
+	    	$event.stopPropagation();
+
+	    	$scope.openedDe = true;
+		};
+
+		$scope.openAte = function($event) {
+	    	$event.preventDefault();
+	    	$event.stopPropagation();
+
+	    	$scope.openedAte = true;
+		};
+		
+		$scope.pesquisar = function() {
+			$('#servicos-grid').DataTable().ajax.reload();
+		};
+
+		$scope.visualizar = function(id) {
+			var modalInstance = $modal.open({
+            	templateUrl: 'modalVisualizar.html',
+            	controller: ModalInstanceCtrl,
+            	resolve: {
+         			servicoId: function () {
+           				return id;
+         			}
+       			},
+            	size: 'lg'
+            });
+
+            var state = $('#modal-state');
+            modalInstance.result.then(function () {
+            	state.text('Modal dismissed with OK status');
+            }, function () {
+            	state.text('Modal dismissed with Cancel status');
+            });
+		};
+	}
+]);
+'use strict';
+
+//Articles service used for communicating with the articles REST endpoints
+angular.module('movimentacoes').factory('Servicos', ['$resource',
+	function($resource) {
+
+		var Quantidade = $resource('api/pesquisa/servicos');
+
+		var Servicos = $resource('api/servicos/:servicoId', 
+			{ servicoId: '@_id' });
+
+		var Servico = $resource('api/servico/:servicoId', 
+			{ servicoId: '@_id' }, 
+			{ update: { method: 'PUT' } });
+    	
+    	return {
+    		servicos: Servicos,
+    		servico: Servico,
+    		quantidade: Quantidade
+    	};
+	}
+]).factory('Depositos', ['$resource',
+	function($resource) {
+
+		var Quantidade = $resource('api/pesquisa/depositos');
+
+		var Depositos = $resource('api/depositos/:depositoId', 
+			{ depositoId: '@_id' });
+
+		var Deposito = $resource('api/deposito/:depositoId', 
+			{ depositoId: '@_id' }, 
+			{ update: { method: 'PUT' } });
+    	
+    	return {
+    		depositos: Depositos,
+    		deposito: Deposito,
+    		quantidade: Quantidade
+    	};
+	}
+]).factory('Pagamentos', ['$resource',
+	function($resource) {
+
+		var Quantidade = $resource('api/pesquisa/pagamentos');
+
+		var Pagamentos = $resource('api/pagamentos/:pagamentoId', 
+			{ pagamentoId: '@_id' });
+
+		var Pagamento = $resource('api/pagamento/:pagamentoId', 
+			{ pagamentoId: '@_id' }, 
+			{ update: { method: 'PUT' } });
+    	
+    	return {
+    		pagamentos: Pagamentos,
+    		pagamento: Pagamento,
+    		quantidade: Quantidade
+    	};
+	}
+]);
 /**=========================================================
  * Module: navbar-search.js
  * Navbar search toggler * Auto dismiss on ESC key
@@ -1504,8 +2026,9 @@ angular.module('users').config(['$httpProvider',
 ]).run(['Menus',
 	function(Menus) {
 		// Set top bar menu items
-		Menus.addMenuItem('sidebar', 'Usuários do Sistema', 'usuarios-sistema', 'dropdown', '/usuarios-sistema(/.*)?', false, null, 20, 'icon-lock');
-		Menus.addSubMenuItem('sidebar', 'usuarios-sistema', 'Listar usuários', 'usuarios-sistema');
+		Menus.addMenuItem('sidebar', 'Sistema', 'configuracoes-sistema', 'dropdown', '/configuracoes-sistema(/.*)?', false, null, 20, 'icon-lock');
+		Menus.addSubMenuItem('sidebar', 'configuracoes-sistema', 'Configurações', 'configuracoes-sistema');
+		Menus.addSubMenuItem('sidebar', 'configuracoes-sistema', 'Usuários', 'usuarios-sistema');		
 	}
 ]);
 'use strict';
@@ -1556,6 +2079,12 @@ angular.module('users').config(['$stateProvider', 'RouteHelpersProvider',
 			url: '/usuarios-sistema',
 			title: 'Listar Usuários Sistema',
 			templateUrl: 'modules/users/views/list-usuarios-sistema.client.view.html',
+			resolve: helper.resolveFor('datatables')
+		}).
+		state('app.listConfiguracoes', {
+			url: '/configuracoes-sistema',
+			title: 'Configurações',
+			templateUrl: 'modules/users/views/list-configuracoes-sistema.client.view.html',
 			resolve: helper.resolveFor('datatables')
 		});
 	}
@@ -1608,6 +2137,77 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 				$scope.loginForm.account_email.$dirty = true;
 				$scope.loginForm.account_password.$dirty = true;
 			}
+		};
+	}
+]);
+'use strict';
+
+angular.module('users').controller('ConfiguracoesController', ['$scope', '$stateParams', '$location', 
+	'Authentication', 'ConfiguracoesSistema', 'DTOptionsBuilder', 'DTColumnDefBuilder',
+	function($scope, $stateParams, $location, Authentication, ConfiguracoesSistema, DTOptionsBuilder, DTColumnDefBuilder) {
+		$scope.authentication = Authentication;
+
+		this.dtOptions = DTOptionsBuilder
+		.newOptions()
+	    .withPaginationType('full_numbers')
+	    .withOption('bLengthChange', false)
+	    .withOption('bInfo', false)
+	    .withLanguageSource('/server/pt-br.json')
+	    .withBootstrap();
+	
+		this.dtColumnDefs = [
+			DTColumnDefBuilder
+				.newColumnDef(0)
+				.withOption('bSearchable', false)
+				.notVisible()
+				.notSortable(),
+	        DTColumnDefBuilder
+	        	.newColumnDef(1)
+	        	.notSortable()
+		];	
+
+		$scope.urlBase = '/#!/usuarios-sistema';
+
+		// Context
+		$scope.authentication = Authentication;
+		$scope.usuariosMobile = ConfiguracoesSistema.query();
+
+		$scope.deleteConfirm = function(index) {
+			noty({
+				modal: true,
+		        text: 'Tem certeza que deseja deletar o registro?', 
+		        buttons: [
+		            { addClass: 'btn btn-primary', text: 'Sim', onClick: function($noty) {
+		                    $noty.close();
+		                    var caixa = $scope.caixas[index];
+
+							if (caixa) {							
+								caixa.$remove( function (response) {
+									if (response) {
+										$scope.caixas = _.without($scope.caixas, caixa);
+
+										noty({
+										    text: response.message,
+										    type: response.type
+										});
+									}
+								}, function(errorResponse) {
+									$scope.error = errorResponse.data.message;
+									noty({
+									    text: errorResponse.data.message,
+									    type: errorResponse.data.type
+									});
+								});
+							}
+		                }
+		            },
+		            { 
+		                addClass: 'btn btn-warning', text: 'Não', onClick: function($noty) {
+		                    $noty.close();
+		                }
+		            }
+		        ]
+		    }); 
 		};
 	}
 ]);
@@ -1809,6 +2409,20 @@ angular.module('users').factory('Authentication', [
 		};
 
 		return _this._data;
+	}
+]);
+'use strict';
+
+//Articles service used for communicating with the articles REST endpoints
+angular.module('users').factory('ConfiguracoesSistema', ['$resource',
+	function($resource) {
+		return $resource('api/configuracoes/:configuracaoId', {
+			usuarioSistemaId: '@_id'
+		}, {
+			update: {
+				method: 'PUT'
+			}
+		});
 	}
 ]);
 'use strict';

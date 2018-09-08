@@ -77,6 +77,20 @@ exports.delete = function(req, res) {
 	});
 };
 
+ exports.listDatatables = function(req, res) {	
+	var datatablesQuery = require('datatables-query'),
+        params = req.body,
+        query = datatablesQuery(Pagamento);
+ 
+    query.run(params).then(function (data) {
+        res.json(data);
+    }, function (err) {
+        return res.status(400).send({
+			message: errorHandler.getErrorMessage(err)
+		});
+    });
+};
+
 exports.listAll = function(req, res) {	
 	Pagamento.find({}, '-updated -created')
 		.sort('dataPagamento -created').exec(function(err, pagamentos) {

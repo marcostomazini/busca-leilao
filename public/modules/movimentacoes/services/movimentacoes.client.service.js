@@ -37,4 +37,22 @@ angular.module('movimentacoes').factory('Servicos', ['$resource',
     		quantidade: Quantidade
     	};
 	}
+]).factory('Pagamentos', ['$resource',
+	function($resource) {
+
+		var Quantidade = $resource('api/pesquisa/pagamentos');
+
+		var Pagamentos = $resource('api/pagamentos/:pagamentoId', 
+			{ pagamentoId: '@_id' });
+
+		var Pagamento = $resource('api/pagamento/:pagamentoId', 
+			{ pagamentoId: '@_id' }, 
+			{ update: { method: 'PUT' } });
+    	
+    	return {
+    		pagamentos: Pagamentos,
+    		pagamento: Pagamento,
+    		quantidade: Quantidade
+    	};
+	}
 ]);

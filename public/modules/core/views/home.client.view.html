@@ -3,14 +3,28 @@
   <div class="row">
      <div class="col-lg-3 col-sm-6">
         <!-- START widget-->
+        <div class="panel widget bg-yellow">
+           <div class="row row-table">
+              <div class="col-xs-4 text-center bg-yellow-dark pv-lg">
+                 <em class="icon-user fa-3x"></em>
+              </div>
+              <div class="col-xs-8 pv-lg">
+                 <div class="h2 mt0">{{qtdeUsuarios}}</div>
+                 <div class="text-uppercase">Usuários</div>
+              </div>
+           </div>
+        </div>
+     </div>
+    <div class="col-lg-3 col-sm-6">
+        <!-- START widget-->
         <div class="panel widget bg-primary">
            <div class="row row-table">
               <div class="col-xs-4 text-center bg-primary-dark pv-lg">
                  <em class="icon-user fa-3x"></em>
               </div>
               <div class="col-xs-8 pv-lg">
-                 <div class="h2 mt0">512</div>
-                 <div class="text-uppercase">Usuários</div>
+                 <div class="h2 mt0">{{qtdePagamentos}}</div>
+                 <div class="text-uppercase">Pagamentos</div>
               </div>
            </div>
         </div>
@@ -23,15 +37,15 @@
                  <em class="icon-cloud-upload fa-3x"></em>
               </div>
               <div class="col-xs-8 pv-lg">
-                 <div class="h2 mt0">754
-                    <small>pré</small>
+                 <div class="h2 mt0">{{qtdeDepositos}}
+                    <small>entrada</small>
                  </div>
-                 <div class="text-uppercase">Inscrições</div>
+                 <div class="text-uppercase">Depositos</div>
               </div>
            </div>
         </div>
      </div>
-     <div class="col-lg-3 col-md-6 col-sm-12">
+      <div class="col-lg-3 col-md-6 col-sm-12">
         <!-- START widget-->
         <div class="panel widget bg-green">
            <div class="row row-table">
@@ -39,7 +53,21 @@
                  <em class="icon-bubbles fa-3x"></em>
               </div>
               <div class="col-xs-8 pv-lg">
-                 <div class="h2 mt0">{{veiculos}}</div>
+                 <div class="h2 mt0">{{qtdeServicos}}</div>
+                 <div class="text-uppercase">Serviços</div>
+              </div>
+           </div>
+        </div>
+     </div>
+     <div class="col-lg-3 col-md-6 col-sm-12">
+        <!-- START widget-->
+        <div class="panel widget bg-gray">
+           <div class="row row-table">
+              <div class="col-xs-4 text-center bg-gray-dark pv-lg">
+                 <em class="icon-bubbles fa-3x"></em>
+              </div>
+              <div class="col-xs-8 pv-lg">
+                 <div class="h2 mt0">{{qtdeVeiculos}}</div>
                  <div class="text-uppercase">Veiculos</div>
               </div>
            </div>

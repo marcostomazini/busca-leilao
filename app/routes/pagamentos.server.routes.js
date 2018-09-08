@@ -35,7 +35,7 @@ module.exports = function(app) {
 
 	app.route('/api/pesquisa/pagamentos')
 		.get(users.requiresLogin, pagamentos.count)
-		.post(users.requiresLogin, pagamentos.listAll);
+		.post(users.requiresLogin, pagamentos.listDatatables);
 
 	app.route('/api/pagamento/:pagamentoId')
 		.get(users.requiresLogin, pagamentos.read)
