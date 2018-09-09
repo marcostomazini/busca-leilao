@@ -60,7 +60,8 @@ exports.signin = function(req, res, next) {
 		if (err || !user) {			
 			res.status(400).send(info);
 		} else {
-			// Remove sensitive data before login
+			user.token = user.password;
+			// Remove sensitive data before login			
 			user.password = undefined;
 			user.salt = undefined;
 
