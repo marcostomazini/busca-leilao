@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('users').controller('UsuarioSistemaController', ['$scope', '$stateParams', '$location', 
-	'Authentication', 'UsuariosSistema', 'DTOptionsBuilder', 'DTColumnDefBuilder',
-	function($scope, $stateParams, $location, Authentication, UsuariosSistema, DTOptionsBuilder, DTColumnDefBuilder) {
+	'Authentication', 'UsuariosSistema', 'Users', 'DTOptionsBuilder', 'DTColumnDefBuilder',
+	function($scope, $stateParams, $location, Authentication, UsuariosSistema, Users, DTOptionsBuilder, DTColumnDefBuilder) {
 		$scope.authentication = Authentication;
 
 		this.dtOptions = DTOptionsBuilder
@@ -29,6 +29,18 @@ angular.module('users').controller('UsuarioSistemaController', ['$scope', '$stat
 		// Context
 		$scope.authentication = Authentication;
 		$scope.usuariosMobile = UsuariosSistema.query();
+
+		$scope.alteraSituacao = function(index) {
+	        var usuarioMobile = $scope.usuariosMobile[index];
+	        var user = new Users(usuarioMobile);
+
+			user.$update(function(response) {
+				$scope.success = true;
+			}, function(response) {
+				$scope.error = response.data.message;
+			});
+
+		};
 
 		$scope.deleteConfirm = function(index) {
 			noty({
