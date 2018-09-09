@@ -21,8 +21,7 @@ var fs = require('fs'),
 	flash = require('connect-flash'),
 	config = require('./config'),
 	consolidate = require('consolidate'),
-	path = require('path'),
-	cors = require('cors');
+	path = require('path');
 
 module.exports = function(db) {
 	// Initialize express app
@@ -132,9 +131,6 @@ module.exports = function(db) {
 			error: err.stack
 		});
 	});
-
-	// cors
-	//app.use(cors());
 
 	// Assume 404 since no middleware responded
 	app.use(function(req, res) {
