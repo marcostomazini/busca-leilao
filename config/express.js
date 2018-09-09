@@ -134,7 +134,7 @@ module.exports = function(db) {
 	});
 
 	// cors
-	app.use(cors());
+	//app.use(cors());
 
 	// Assume 404 since no middleware responded
 	app.use(function(req, res) {
