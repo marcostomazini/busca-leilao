@@ -64,7 +64,7 @@ exports.signin = function(req, res, next) {
 			user.password = undefined;
 			user.salt = undefined;
 
-			if (user.ativo == false) {
+			if (user.ativo == false || user.ativo == null || user.ativo == undefined) {
 				res.status(401).send({
 					message: 'Usuário não autorizado!'
 				});
