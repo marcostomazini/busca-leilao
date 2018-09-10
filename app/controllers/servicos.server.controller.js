@@ -26,7 +26,7 @@ exports.create = function(req, res) {
 			socketio.emit('message-toaster', {				
 				type: 'info',
 				title: 'Novo servico',
-				message: 'servico Cadastrado ' + servico.nome
+				message: servico.nomeCliente + ' - ' + servico.placa
 			});
 
 			res.json(servico);				
