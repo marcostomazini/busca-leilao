@@ -106,15 +106,25 @@ exports.listMobile = function(req, res) {
 			//var dataPesquisa = new Date().setDate(new Date().getDate() - parseInt(configuracao.valor));		
 
 			var dataAtual = new Date();
-			var anoAtual = dataAtual.getFullYear();
-			var mesAtual = (dataAtual.getMonth());
-			var diaAtual = dataAtual.getDate();
-			var dataCompilada = new Date(anoAtual, mesAtual, diaAtual);
-		
-			var dataPesquisa = dataCompilada.setDate(dataCompilada.getDate() - parseInt(configuracao.valor));
+			var anoAtual = dataAtual.getUTCFullYear();
+			var mesAtual = (dataAtual.getUTCMonth());
+			var diaAtual = dataAtual.getUTCDate();
 
-			Servico.find({ dataHoraEntrada: { $gte: dataPesquisa } }, '-updated -created')
-				.sort('-created').exec(function(err, servicos) {
+			var dataCompiladaInicio = new Date(anoAtual, mesAtual, diaAtual);
+			var dataCompiladaFim = new Date(anoAtual, mesAtual, diaAtual, 23, 59, 59);
+		
+			var dataPesquisaInicio = dataCompiladaInicio.setDate(dataCompiladaInicio.getDate() - parseInt(configuracao.valor));
+			var dataPesquisaFim = dataCompiladaFim.setDate(dataCompiladaFim.getDate() - parseInt(configuracao.valor));
+			console.log(dataPesquisaInicio);
+			console.log(dataPesquisaFim);
+
+			Servico.find({ 
+							dataHoraEntrada: { 
+								$lte: dataPesquisaFim, 
+								$gte: dataPesquisaInicio  
+							}
+						 }, 
+					'-updated -created').sort('-created').exec(function(err, servicos) {
 				if (err) {
 					return res.status(400).send({
 						message: errorHandler.getErrorMessage(err)
