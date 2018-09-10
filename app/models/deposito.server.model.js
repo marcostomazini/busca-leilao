@@ -21,7 +21,7 @@ var DepositoSchema = new Schema({
 		default: ''
 	},
 	dataDeposito: {
-		type: Date,
+		type: String,
 		default: Date.now
 	},
 	updated: {

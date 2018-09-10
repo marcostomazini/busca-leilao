@@ -26,7 +26,7 @@ var PagamentoSchema = new Schema({
         default: 'OUTROS'
     },
 	dataPagamento: {
-		type: Date,
+		type: String,
 		default: Date.now
 	},
 	updated: {
