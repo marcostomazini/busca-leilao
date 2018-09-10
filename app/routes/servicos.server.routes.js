@@ -12,7 +12,7 @@ module.exports = function(app) {
 	app.route('/api/mobile/servicos')
 		.get(passport.authenticate('bearer', {
         	session: false
-    	}), servicos.listAll)
+    	}), servicos.listMobile)
 		.post(passport.authenticate('bearer', {
         	session: false
     	}), servicos.create);

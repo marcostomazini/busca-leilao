@@ -6,7 +6,8 @@
 var mongoose = require('mongoose'),
 	errorHandler = require('./errors.server.controller'),
 	Servico = mongoose.model('Servico'),
-	ObjectId = mongoose.Types.ObjectId,
+	Configuracao = mongoose.model('Configuracao'),
+	ObjectId = mongoose.Types.ObjectId,	
 	_ = require('lodash');
 
 /**
@@ -94,6 +95,29 @@ exports.listDatatables = function(req, res) {
     });
 };
 
+exports.listMobile = function(req, res) {	
+	Configuracao.findOne({ nome: 'SERVICOS_DIAS'}, '-updated -created')
+		.exec(function(err, configuracao) {
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {			
+			var dataPesquisa = new Date().setDate(new Date().getDate() - parseInt(configuracao.valor));		
+			Servico.find({created: {$gte: dataPesquisa}}, '-updated -created')
+				.sort('-created').exec(function(err, servicos) {
+				if (err) {
+					return res.status(400).send({
+						message: errorHandler.getErrorMessage(err)
+					});
+				} else {
+					res.json(servicos);
+				}
+			});
+		}
+	});	
+};
+
 exports.listAll = function(req, res) {	
 	Servico.find({}, '-updated -created')
 		.sort('-created').exec(function(err, servicos) {
@@ -104,7 +128,7 @@ exports.listAll = function(req, res) {
 		} else {
 			res.json(servicos);
 		}
-	});
+	});	
 };
 
 /**
