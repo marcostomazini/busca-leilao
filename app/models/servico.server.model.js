@@ -58,11 +58,11 @@ var ServicoSchema = new Schema({
 		default: 'Fila'
 	},
 	dataHoraEntrada: {
-		type: Date,
+		type: String,
 		default: Date.now
 	},
 	dataHoraSaida: {
-		type: Date,
+		type: String,
 		default: Date.now
 	},
 	updated: {

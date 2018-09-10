@@ -115,6 +115,7 @@ exports.listMobile = function(req, res) {
 		
 			var dataPesquisaInicio = dataCompiladaInicio.setDate(dataCompiladaInicio.getDate() - parseInt(configuracao.valor));
 			var dataPesquisaFim = dataCompiladaFim.setDate(dataCompiladaFim.getDate() - parseInt(configuracao.valor));
+			console.log(dataAtual);
 			console.log(dataPesquisaInicio);
 			console.log(dataPesquisaFim);
 
