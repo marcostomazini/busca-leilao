@@ -3,7 +3,8 @@
 module.exports = {
 	//db: 'mongodb://localhost/leilao-dev',
 	//db: process.env.MONGOLAB_URI_DEV || 'mongodb://' + (process.env.MONGOLAB_USERNAME_DEV) + ':lava123jato@ds149742.mlab.com:49742/lavajato_dev',
-	db: process.env.MONGOLAB_URI_DEV || 'mongodb://lavajato:lava123jato@ds149742.mlab.com:49742/lavajato_dev',
+	//db: process.env.MONGOLAB_URI_DEV || 'mongodb://lavajato:lava123jato@ds149742.mlab.com:49742/lavajato_dev',
+	db: process.env.MONGOLAB_URI_DEV || 'mongodb://teste:teste123@ds051913.mlab.com:51913/heroku_3m3qfd4s',
 	app: {
 		title: 'Leilão - Development Environment'
 	},

@@ -103,8 +103,17 @@ exports.listMobile = function(req, res) {
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {			
-			var dataPesquisa = new Date().setDate(new Date().getDate() - parseInt(configuracao.valor));		
-			Servico.find({created: {$gte: dataPesquisa}}, '-updated -created')
+			//var dataPesquisa = new Date().setDate(new Date().getDate() - parseInt(configuracao.valor));		
+
+			var dataAtual = new Date();
+			var anoAtual = dataAtual.getFullYear();
+			var mesAtual = (dataAtual.getMonth());
+			var diaAtual = dataAtual.getDate();
+			var dataCompilada = new Date(anoAtual, mesAtual, diaAtual);
+		
+			var dataPesquisa = dataCompilada.setDate(dataCompilada.getDate() - parseInt(configuracao.valor));
+
+			Servico.find({ dataHoraEntrada: { $gte: dataPesquisa } }, '-updated -created')
 				.sort('-created').exec(function(err, servicos) {
 				if (err) {
 					return res.status(400).send({

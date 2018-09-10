@@ -123,7 +123,17 @@ UserSchema.methods.hashPassword = function(password) {
  * Create instance method for authenticating user
  */
 UserSchema.methods.authenticate = function(password) {
-	return this.password === this.hashPassword(password);
+	/*console.log('pass:' +password);
+	console.log('hash pass:' +this.hashPassword(password));
+	console.log(crypto.pbkdf2Sync(password, this.salt, 10000, 64).toString('base64'));
+
+	console.log('token:' + this.token);
+*/
+	if (this.salt && password) {
+		return crypto.pbkdf2Sync(password, this.salt, 10000, 64).toString('base64');
+	} else {
+		return this.password === this.hashPassword(password);
+	}
 };
 
 /**

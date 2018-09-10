@@ -20,6 +20,7 @@ module.exports = function() {
 				if (err) {
 					return done(err);
 				}
+				console.log(user);
 				if (!user) {
 					return done(null, false, {
 						message: 'Usuário ou senha incorreta',
