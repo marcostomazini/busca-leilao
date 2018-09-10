@@ -1099,7 +1099,7 @@ angular.module('movimentacoes')
   				}),,        	
         	DTColumnBuilder.newColumn('dataHoraSaida').withTitle('Data Saida')
         		.renderWith(function(data, type, full) {
-    				return $filter('date')(data, 'dd/MM/yyyy hh:mm');
+    				return $filter('date')(data, 'dd/MM/yyyy HH:mm');
   				}),
         	DTColumnBuilder.newColumn(null).withTitle('Tipo Pgto')
         		.renderWith(statusHtml)
