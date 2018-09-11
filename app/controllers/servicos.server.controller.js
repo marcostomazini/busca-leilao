@@ -102,9 +102,7 @@ exports.listMobile = function(req, res) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
-		} else {			
-			//var dataPesquisa = new Date().setDate(new Date().getDate() - parseInt(configuracao.valor));		
-
+		} else {
 			var dataAtual = new Date();
 			var anoAtual = dataAtual.getUTCFullYear();
 			var mesAtual = (dataAtual.getUTCMonth());
@@ -114,10 +112,7 @@ exports.listMobile = function(req, res) {
 			var dataCompiladaFim = new Date(anoAtual, mesAtual, diaAtual, 23, 59, 59);
 		
 			var dataPesquisaInicio = dataCompiladaInicio.setDate(dataCompiladaInicio.getDate() - parseInt(configuracao.valor));
-			var dataPesquisaFim = dataCompiladaFim.setDate(dataCompiladaFim.getDate() - parseInt(configuracao.valor));
-			console.log(dataAtual);
-			console.log(dataPesquisaInicio);
-			console.log(dataPesquisaFim);
+			var dataPesquisaFim = dataCompiladaFim.setDate(dataCompiladaFim.getDate());
 
 			Servico.find({ 
 							dataHoraEntrada: { 

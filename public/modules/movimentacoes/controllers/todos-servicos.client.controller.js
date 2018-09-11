@@ -118,7 +118,7 @@ angular.module('movimentacoes')
         	DTColumnBuilder.newColumn('tipoServico').withTitle('Serviço'),
         	DTColumnBuilder.newColumn('valorRecebido').withTitle('Vlr Recebido')
         		.renderWith(function(money, type, full) {
-    				return $filter('currency')(money, 'R$: ');
+    				return $filter('currency')(money, '');
   				}),,        	
         	DTColumnBuilder.newColumn('dataHoraSaida').withTitle('Data Saida')
         		.renderWith(function(data, type, full) {
