@@ -6,6 +6,7 @@
 var mongoose = require('mongoose'),
 	errorHandler = require('./errors.server.controller'),
 	Deposito = mongoose.model('Deposito'),
+	Configuracao = mongoose.model('Configuracao'),
 	ObjectId = mongoose.Types.ObjectId,
 	_ = require('lodash');
 
