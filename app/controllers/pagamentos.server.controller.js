@@ -107,7 +107,7 @@ exports.listAll = function(req, res) {
 
 
 exports.listMobile = function(req, res) {	
-	Configuracao.findOne({ nome: 'SERVICOS_DIAS'}, '-updated -created')
+	Configuracao.findOne({ nome: 'PAGAMENTOS_DIAS'}, '-updated -created')
 		.exec(function(err, configuracao) {
 		if (err) {
 			return res.status(400).send({
