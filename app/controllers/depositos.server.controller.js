@@ -26,7 +26,7 @@ exports.create = function(req, res) {
 			socketio.emit('message-toaster', {				
 				type: 'info',
 				title: 'Novo Deposito',
-				message: 'Deposito Cadastrado ' + deposito.nome
+				message: 'Deposito: ' + deposito.descricao
 			});
 
 			res.json(deposito);				
@@ -105,6 +105,45 @@ exports.listAll = function(req, res) {
 			res.json(depositos);
 		}
 	});
+};
+
+exports.listMobile = function(req, res) {	
+	Configuracao.findOne({ nome: 'SERVICOS_DIAS'}, '-updated -created')
+		.exec(function(err, configuracao) {
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			var dataAtual = new Date();
+			var anoAtual = dataAtual.getUTCFullYear();
+			var mesAtual = (dataAtual.getUTCMonth());
+			var diaAtual = dataAtual.getUTCDate();
+
+			var dataCompiladaInicio = new Date(anoAtual, mesAtual, diaAtual);
+			var dataCompiladaFim = new Date(anoAtual, mesAtual, diaAtual, 23, 59, 59);
+		
+			var dataPesquisaInicio = dataCompiladaInicio.setDate(dataCompiladaInicio.getDate() - parseInt(configuracao.valor));
+			var dataPesquisaFim = dataCompiladaFim.setDate(dataCompiladaFim.getDate());
+
+			Deposito.find({ 
+							dataDeposito: { 
+								$lte: dataPesquisaFim, 
+								$gte: dataPesquisaInicio  
+							},
+							excluido: false
+						 }, 
+					'-updated -created').sort('-created').exec(function(err, depositos) {
+				if (err) {
+					return res.status(400).send({
+						message: errorHandler.getErrorMessage(err)
+					});
+				} else {
+					res.json(depositos);
+				}
+			});
+		}
+	});	
 };
 
 /**

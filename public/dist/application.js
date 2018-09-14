@@ -819,6 +819,14 @@ angular.module('movimentacoes')
         	$compile(angular.element(row).contents())($scope);
     	}
 
+    	var statusHtml = function(data, type, full, meta) {
+			if (data.excluido) {
+		        return '<div class="label label-danger">excluido</div><br>';			    
+			} else {
+			    return '<div class="label label-success">ativo</div><br>';
+			}
+		}
+
 		this.dtOptions = DTOptionsBuilder
 			.newOptions()			
 	    	.withOption('ajax', {
@@ -851,7 +859,9 @@ angular.module('movimentacoes')
         	DTColumnBuilder.newColumn('dataDeposito').withTitle('Data do Deposito')
         		.renderWith(function(data, type, full) {
     				return $filter('date')(data, 'dd/MM/yyyy');
-  				})
+  				}),
+			DTColumnBuilder.newColumn(null).withTitle('Status')
+        		.renderWith(statusHtml)
   			];
 
 		$scope.urlBase = '/#!/depositos';
@@ -915,6 +925,14 @@ angular.module('movimentacoes')
         	$compile(angular.element(row).contents())($scope);
     	}
 
+    	var statusHtml = function(data, type, full, meta) {
+			if (data.excluido) {
+		        return '<div class="label label-danger">excluido</div><br>';			    
+			} else {
+			    return '<div class="label label-success">ativo</div><br>';
+			}
+		}
+
 		this.dtOptions = DTOptionsBuilder
 			.newOptions()			
 	    	.withOption('ajax', {
@@ -948,7 +966,9 @@ angular.module('movimentacoes')
         	DTColumnBuilder.newColumn('dataPagamento').withTitle('Data Pagamento')
         		.renderWith(function(data, type, full) {
     				return $filter('date')(data, 'dd/MM/yyyy');
-  				})
+  				}),
+  			DTColumnBuilder.newColumn(null).withTitle('Status')
+        		.renderWith(statusHtml)
   			];
 
 		$scope.urlBase = '/#!/pagamentos';

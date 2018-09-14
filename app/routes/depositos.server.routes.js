@@ -12,7 +12,7 @@ module.exports = function(app) {
 	app.route('/api/mobile/depositos')
 		.get(passport.authenticate('bearer', {
         	session: false
-    	}), depositos.listAll)
+    	}), depositos.listMobile)
 		.post(passport.authenticate('bearer', {
         	session: false
     	}), depositos.create);

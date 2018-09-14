@@ -104,6 +104,46 @@ exports.listAll = function(req, res) {
 	});
 };
 
+
+exports.listMobile = function(req, res) {	
+	Configuracao.findOne({ nome: 'SERVICOS_DIAS'}, '-updated -created')
+		.exec(function(err, configuracao) {
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			var dataAtual = new Date();
+			var anoAtual = dataAtual.getUTCFullYear();
+			var mesAtual = (dataAtual.getUTCMonth());
+			var diaAtual = dataAtual.getUTCDate();
+
+			var dataCompiladaInicio = new Date(anoAtual, mesAtual, diaAtual);
+			var dataCompiladaFim = new Date(anoAtual, mesAtual, diaAtual, 23, 59, 59);
+		
+			var dataPesquisaInicio = dataCompiladaInicio.setDate(dataCompiladaInicio.getDate() - parseInt(configuracao.valor));
+			var dataPesquisaFim = dataCompiladaFim.setDate(dataCompiladaFim.getDate());
+
+			Pagamento.find({ 
+							dataPagamento: { 
+								$lte: dataPesquisaFim, 
+								$gte: dataPesquisaInicio  
+							},
+							excluido: false
+						 }, 
+					'-updated -created').sort('-created').exec(function(err, pagamentos) {
+				if (err) {
+					return res.status(400).send({
+						message: errorHandler.getErrorMessage(err)
+					});
+				} else {
+					res.json(pagamentos);
+				}
+			});
+		}
+	});	
+};
+
 /**
  * List of pagamentos
  */

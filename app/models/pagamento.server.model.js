@@ -29,6 +29,10 @@ var PagamentoSchema = new Schema({
 		type: String,
 		default: Date.now
 	},
+	excluido: {
+		type: Boolean,
+		default: false
+	},
 	updated: {
 		type: Date,
 		default: Date.now
