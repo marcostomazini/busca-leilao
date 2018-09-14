@@ -27,7 +27,7 @@ exports.create = function(req, res) {
 			socketio.emit('message-toaster', {				
 				type: 'info',
 				title: 'Novo Cadastro',
-				message: 'Pagamento Cadastrado ' + pagamento.nome
+				message: 'Pagamento: ' + pagamento.descricao
 			});
 
 			res.json(pagamento);				
